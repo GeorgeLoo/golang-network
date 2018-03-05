@@ -26,6 +26,8 @@ const (
     uiCd   = "cd"
     uiPwd  = "pwd"
     uiQuit = "quit"
+    uiShut = "shutdown"
+
 )
 
 // strings used across the network
@@ -33,6 +35,7 @@ const (
     DIR = "DIR"
     CD  = "CD"
     PWD = "PWD"
+    kShutdown = "SHUTDOWN"  // gloo 5.3.2018
 )
 
 func main() {
@@ -74,6 +77,8 @@ func main() {
         case uiQuit:
             conn.Close()
             os.Exit(0)
+        case uiShut:
+            shutDown(conn)
         default:
             fmt.Println("Unknown command")
         }
@@ -95,6 +100,18 @@ func dirRequest(conn net.Conn) {
             fmt.Println(string(contents[0 : length-4]))
             return
         }
+    }
+}
+
+func shutDown(conn net.Conn) {
+    conn.Write([]byte(kShutdown))
+    var response [512]byte
+    n, _ := conn.Read(response[0:])
+    s := string(response[0:n])
+    if s != "OK" {
+        fmt.Println("Failed to shutdown")
+    } else {
+        fmt.Println("shutdown done")
     }
 }
 

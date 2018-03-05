@@ -8,12 +8,15 @@ import (
     "fmt"
     "net"
     "os"
+
 )
 
 const (
     DIR = "DIR"
     CD  = "CD"
     PWD = "PWD"
+    kShutdown = "SHUTDOWN"  // gloo 5.3.2018
+
 )
 
 func main() {
@@ -37,6 +40,9 @@ func main() {
 }
 
 func handleClient(conn net.Conn) {
+
+	fmt.Println("handleClient ")
+
     defer conn.Close()
 
     var buf [512]byte
@@ -55,9 +61,19 @@ func handleClient(conn net.Conn) {
             dirList(conn)
         } else if s[0:3] == PWD {
             pwd(conn)
+        } else if s[0:8] == kShutdown {
+        	fmt.Println("shut down ")
+        	shutdown(conn)
+        	os.Exit(0)
+        	
         }
 
     }
+}
+
+func shutdown(conn net.Conn) {
+	s := "OK"
+	conn.Write([]byte(s))
 }
 
 func chdir(conn net.Conn, s string) {
