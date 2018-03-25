@@ -27,6 +27,7 @@ const (
     uiPwd  = "pwd"
     uiQuit = "quit"
     uiShut = "shutdown"
+    uiSend = "send"
 
 )
 
@@ -36,6 +37,7 @@ const (
     CD  = "CD"
     PWD = "PWD"
     kShutdown = "SHUTDOWN"  // gloo 5.3.2018
+    kSend = "SEND"
 )
 
 func main() {
@@ -79,10 +81,17 @@ func main() {
             os.Exit(0)
         case uiShut:
             shutDown(conn)
+        case uiSend:  // gloo 25.3.2018
+            sendMessage(conn, strs[1])
         default:
             fmt.Println("Unknown command")
         }
     }
+}
+
+func sendMessage(conn net.Conn, msg string) {
+
+    conn.Write([]byte(kSend + " " + msg))
 }
 
 func dirRequest(conn net.Conn) {

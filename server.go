@@ -16,6 +16,11 @@ const (
     CD  = "CD"
     PWD = "PWD"
     kShutdown = "SHUTDOWN"  // gloo 5.3.2018
+    kSend = "SEND"
+)
+
+var (
+	gSendBuff string 
 
 )
 
@@ -54,21 +59,31 @@ func handleClient(conn net.Conn) {
         }
 
         s := string(buf[0:n])
+        fmt.Println("s ",s)
         // decode request
         if s[0:2] == CD {
             chdir(conn, s[3:])
         } else if s[0:3] == DIR {
             dirList(conn)
         } else if s[0:3] == PWD {
-            pwd(conn)
+            //pwd(conn)
+            sendmessage(conn)   // gloo 25.3.2018
         } else if s[0:8] == kShutdown {
         	fmt.Println("shut down ")
         	shutdown(conn)
         	os.Exit(0)
-        	
+        } else if s[0:4] == kSend {
+        	fmt.Println("send ")
+        	gSendBuff = s[3:]
+        	fmt.Println("gSendBuff ", gSendBuff)
         }
 
     }
+}
+
+func sendmessage(conn net.Conn) {
+	s := gSendBuff
+	conn.Write([]byte(s))
 }
 
 func shutdown(conn net.Conn) {
