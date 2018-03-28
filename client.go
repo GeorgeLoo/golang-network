@@ -40,13 +40,20 @@ const (
     kSend = "SEND"
 )
 
+var (
+    hostname string
+)
+
 func main() {
-    if len(os.Args) != 2 {
-        fmt.Println("Usage: ", os.Args[0], "host")
+    if len(os.Args) != 3 {
+        fmt.Println("Usage: ", os.Args[0], "host accountName")
         os.Exit(1)
     }
 
     host := os.Args[1]
+
+    accountName := os.Args[2]
+    fmt.Println("accountName ",accountName)  // gloo
 
     conn, err := net.Dial("tcp", host+":1202")
     checkError(err)

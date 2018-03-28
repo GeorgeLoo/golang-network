@@ -74,7 +74,7 @@ func handleClient(conn net.Conn) {
         	os.Exit(0)
         } else if s[0:4] == kSend {
         	fmt.Println("send ")
-        	gSendBuff = s[3:]
+        	gSendBuff = s[4:]
         	fmt.Println("gSendBuff ", gSendBuff)
         }
 
