@@ -1,9 +1,14 @@
 /*
+
 FTPClient
 
 https://ipfs.io/ipfs/QmfYeDhGH9bZzihBUDEQbCbTc5k5FZKURMUoUvfmc27BwL/applevelprotocols/simple_example.html
 
 DESKTOP-K53L4N7
+
+
+Trying to make into a message sending client to client.
+
 
 */
 package main
@@ -34,6 +39,7 @@ const (
 	PWD       = "PWD"
 	kShutdown = "SHUTDOWN" // gloo 5.3.2018
 	kSend     = "SEND"
+	kAccount  = "ACCOUNT"
 )
 
 var (
@@ -55,6 +61,8 @@ func main() {
 	checkError(err)
 
 	reader := bufio.NewReader(os.Stdin)
+
+	sendAccountName(conn, accountName) //gloo
 	for {
 		fmt.Print("Ready > ") // gloo
 		line, err := reader.ReadString('\n')
@@ -90,6 +98,11 @@ func main() {
 			fmt.Println("Unknown command")
 		}
 	}
+}
+
+func sendAccountName(conn net.Conn, msg string) {
+	conn.Write([]byte(kAccount + " " + msg))
+
 }
 
 func sendMessage(conn net.Conn, msg string) {

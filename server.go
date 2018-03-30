@@ -14,6 +14,7 @@ const (
 	PWD       = "PWD"
 	kShutdown = "SHUTDOWN" // gloo 5.3.2018
 	kSend     = "SEND"
+	kAccount  = "ACCOUNT"
 )
 
 var (
@@ -47,6 +48,8 @@ func handleClient(conn net.Conn) {
 	defer conn.Close()
 
 	var buf [512]byte
+    var accountName string
+
 	for {
 		n, err := conn.Read(buf[0:])
 		if err != nil {
@@ -72,6 +75,12 @@ func handleClient(conn net.Conn) {
 			fmt.Println("send ")
 			gSendBuff = s[4:]
 			fmt.Println("gSendBuff ", gSendBuff)
+		} else if s[0:7] == kAccount {
+			fmt.Println("account", "space")
+			gSendBuff = s[8:] // avoid space character
+            accountName = s[8:]
+			fmt.Println("Account is", accountName)
+            
 		}
 
 	}
