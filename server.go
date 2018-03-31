@@ -1,3 +1,5 @@
+
+
 /* FTP Server
  */
 package main
@@ -6,6 +8,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+    "time"
 )
 
 const (
@@ -23,6 +26,8 @@ var (
 
 func main() {
 
+
+
 	fmt.Println("Server running ")
 
 	service := "0.0.0.0:1202"
@@ -33,6 +38,7 @@ func main() {
 	checkError(err)
 
 	for {
+        fmt.Println("Server looping ")
 		conn, err := listener.Accept()
 		if err != nil {
 			continue
@@ -50,6 +56,16 @@ func handleClient(conn net.Conn) {
 	var buf [512]byte
     var accountName string
 
+
+    ticker := time.NewTicker(time.Millisecond * 1000)
+    go func() {
+        for t := range ticker.C {
+            fmt.Println("Tick at", t)
+            sendmessage(conn)
+        }
+    }()
+    
+
 	for {
 		n, err := conn.Read(buf[0:])
 		if err != nil {
@@ -64,9 +80,11 @@ func handleClient(conn net.Conn) {
 			chdir(conn, s[3:])
 		} else if s[0:3] == DIR {
 			dirList(conn)
+            //sendmessage(conn) // gloo 25.3.2018
 		} else if s[0:3] == PWD {
 			//pwd(conn)
-			sendmessage(conn) // gloo 25.3.2018
+			//sendmessage(conn) // gloo 25.3.2018
+            conn.Write([]byte(accountName))
 		} else if s[0:8] == kShutdown {
 			fmt.Println("shut down ")
 			shutdown(conn)

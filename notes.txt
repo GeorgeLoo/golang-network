@@ -13,7 +13,8 @@ make into message sending program
 register account name with server
 
 
-
+Tickers!
+https://mmcgrana.github.io/2012/09/go-by-example-timers-and-tickers.html
 
 
 ++-

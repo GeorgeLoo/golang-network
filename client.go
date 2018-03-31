@@ -20,6 +20,7 @@ import (
 	"net"
 	"os"
 	"strings"
+    "time"
 )
 
 // strings used by the user interface
@@ -51,6 +52,7 @@ func main() {
 		fmt.Println("Usage: ", os.Args[0], "host accountName")
 		os.Exit(1)
 	}
+    //:if expand("%") == ""|browse confirm w|else|confirm w|endif
 
 	host := os.Args[1]
 
@@ -63,6 +65,16 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	sendAccountName(conn, accountName) //gloo
+
+
+    ticker := time.NewTicker(time.Millisecond * 1000)
+    go func() {
+        for t := range ticker.C {
+            fmt.Println("Tick at", t)
+            //sendmessage(conn)
+        }
+    }()
+
 	for {
 		fmt.Print("Ready > ") // gloo
 		line, err := reader.ReadString('\n')
