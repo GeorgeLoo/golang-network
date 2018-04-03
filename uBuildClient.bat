@@ -6,5 +6,6 @@ rem go run mainprog.go dataobj.go
 rem go run mygame.go
 rem -race 
 go build client.go 
-pause
+echo Client built
+pause 
 )

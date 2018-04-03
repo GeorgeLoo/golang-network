@@ -9,6 +9,7 @@ import (
 	"net"
 	"os"
     "time"
+    "strings"
 )
 
 const (
@@ -53,15 +54,28 @@ func handleClient(conn net.Conn) {
 
 	defer conn.Close()
 
-	var buf [512]byte
-    var accountName string
+	var (
+        buf [512]byte
+        accountName string
+        strs []string
+    )
 
-
-    ticker := time.NewTicker(time.Millisecond * 1000)
+    ticker := time.NewTicker(time.Millisecond * 5000)
     go func() {
-        for t := range ticker.C {
-            fmt.Println("Tick at", t)
-            sendmessage(conn)
+        for _ = range ticker.C {
+            //fmt.Println("Tick at", t)
+            //sendmessage(conn)
+            strs = strings.SplitN(gSendBuff, " ", 2)
+            fmt.Println(accountName, "Message for", ">",strs[0],"<",strs[1])
+            //toName := strings.TrimRight(strs[0], "\n")
+            //toName = strings.TrimLeft(toName, " ")
+            fmt.Println("toName",strs[0])
+            fmt.Println("msg",strs[1])
+            fmt.Println("accountName",accountName)
+            if strs[0] == accountName {
+                fmt.Println("Message for me", gSendBuff)
+                gSendBuff = "no message"
+            }
         }
     }()
     
@@ -95,7 +109,7 @@ func handleClient(conn net.Conn) {
 			fmt.Println("gSendBuff ", gSendBuff)
 		} else if s[0:7] == kAccount {
 			fmt.Println("account", "space")
-			gSendBuff = s[8:] // avoid space character
+			gSendBuff = "aa1 bb2" // avoid space character
             accountName = s[8:]
 			fmt.Println("Account is", accountName)
             

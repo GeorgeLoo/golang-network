@@ -52,7 +52,7 @@ func main() {
 		fmt.Println("Usage: ", os.Args[0], "host accountName")
 		os.Exit(1)
 	}
-    //:if expand("%") == ""|browse confirm w|else|confirm w|endif
+
 
 	host := os.Args[1]
 
@@ -69,8 +69,8 @@ func main() {
 
     ticker := time.NewTicker(time.Millisecond * 1000)
     go func() {
-        for t := range ticker.C {
-            fmt.Println("Tick at", t)
+        for _ = range ticker.C {
+            //fmt.Println("Tick at", t)
             //sendmessage(conn)
         }
     }()
@@ -119,7 +119,7 @@ func sendAccountName(conn net.Conn, msg string) {
 
 func sendMessage(conn net.Conn, msg string) {
 
-	conn.Write([]byte(kSend + " " + msg))
+	conn.Write([]byte(kSend + msg))
 }
 
 func dirRequest(conn net.Conn) {
