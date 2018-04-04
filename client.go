@@ -20,7 +20,7 @@ import (
 	"net"
 	"os"
 	"strings"
-    "time"
+	"time"
 )
 
 // strings used by the user interface
@@ -29,7 +29,7 @@ const (
 	uiCd   = "cd"
 	uiPwd  = "pwd"
 	uiQuit = "quit"
-	uiShut = "shutdown"
+	uiShut = "sd"
 	uiSend = "send"
 )
 
@@ -53,7 +53,6 @@ func main() {
 		os.Exit(1)
 	}
 
-
 	host := os.Args[1]
 
 	accountName := os.Args[2]
@@ -66,14 +65,14 @@ func main() {
 
 	sendAccountName(conn, accountName) //gloo
 
-
-    ticker := time.NewTicker(time.Millisecond * 1000)
-    go func() {
-        for _ = range ticker.C {
-            //fmt.Println("Tick at", t)
-            //sendmessage(conn)
-        }
-    }()
+	ticker := time.NewTicker(time.Millisecond * 5000)
+	go func() {
+		for _ = range ticker.C {
+			//fmt.Println("Tick at", accountName)
+			//sendmessage(conn)
+			pwdRequest(conn)
+		}
+	}()
 
 	for {
 		fmt.Print("Ready > ") // gloo

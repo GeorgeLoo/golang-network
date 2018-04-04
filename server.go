@@ -1,5 +1,3 @@
-
-
 /* FTP Server
  */
 package main
@@ -8,8 +6,8 @@ import (
 	"fmt"
 	"net"
 	"os"
-    "time"
-    "strings"
+	"strings"
+	"time"
 )
 
 const (
@@ -27,8 +25,6 @@ var (
 
 func main() {
 
-
-
 	fmt.Println("Server running ")
 
 	service := "0.0.0.0:1202"
@@ -39,7 +35,7 @@ func main() {
 	checkError(err)
 
 	for {
-        fmt.Println("Server looping ")
+		fmt.Println("Server looping ")
 		conn, err := listener.Accept()
 		if err != nil {
 			continue
@@ -55,30 +51,33 @@ func handleClient(conn net.Conn) {
 	defer conn.Close()
 
 	var (
-        buf [512]byte
-        accountName string
-        strs []string
-    )
+		buf         [512]byte
+		accountName string
+		myMsg       string
+		strs        []string
+	)
 
-    ticker := time.NewTicker(time.Millisecond * 5000)
-    go func() {
-        for _ = range ticker.C {
-            //fmt.Println("Tick at", t)
-            //sendmessage(conn)
-            strs = strings.SplitN(gSendBuff, " ", 2)
-            fmt.Println(accountName, "Message for", ">",strs[0],"<",strs[1])
-            //toName := strings.TrimRight(strs[0], "\n")
-            //toName = strings.TrimLeft(toName, " ")
-            fmt.Println("toName",strs[0])
-            fmt.Println("msg",strs[1])
-            fmt.Println("accountName",accountName)
-            if strs[0] == accountName {
-                fmt.Println("Message for me", gSendBuff)
-                gSendBuff = "no message"
-            }
-        }
-    }()
-    
+	myMsg = "my message"
+
+	ticker := time.NewTicker(time.Millisecond * 5000)
+	go func() {
+		for _ = range ticker.C {
+			//fmt.Println("Tick at", t)
+			//sendmessage(conn)
+			strs = strings.SplitN(gSendBuff, " ", 2)
+			fmt.Println(accountName, "Message for", ">", strs[0], "<", strs[1])
+			//toName := strings.TrimRight(strs[0], "\n")
+			//toName = strings.TrimLeft(toName, " ")
+			fmt.Println("toName", strs[0])
+			fmt.Println("msg", strs[1])
+			fmt.Println("accountName", accountName)
+			if strs[0] == accountName {
+				fmt.Println("Message for me", gSendBuff)
+				myMsg = gSendBuff
+				gSendBuff = "no message"
+			}
+		}
+	}()
 
 	for {
 		n, err := conn.Read(buf[0:])
@@ -94,11 +93,11 @@ func handleClient(conn net.Conn) {
 			chdir(conn, s[3:])
 		} else if s[0:3] == DIR {
 			dirList(conn)
-            //sendmessage(conn) // gloo 25.3.2018
+			//sendmessage(conn) // gloo 25.3.2018
 		} else if s[0:3] == PWD {
 			//pwd(conn)
 			//sendmessage(conn) // gloo 25.3.2018
-            conn.Write([]byte(accountName))
+			conn.Write([]byte(myMsg))
 		} else if s[0:8] == kShutdown {
 			fmt.Println("shut down ")
 			shutdown(conn)
@@ -110,9 +109,9 @@ func handleClient(conn net.Conn) {
 		} else if s[0:7] == kAccount {
 			fmt.Println("account", "space")
 			gSendBuff = "aa1 bb2" // avoid space character
-            accountName = s[8:]
+			accountName = s[8:]
 			fmt.Println("Account is", accountName)
-            
+
 		}
 
 	}
