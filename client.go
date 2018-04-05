@@ -45,6 +45,7 @@ const (
 
 var (
 	hostname string
+    oldMsg string
 )
 
 func main() {
@@ -166,7 +167,10 @@ func pwdRequest(conn net.Conn) {
 	var response [512]byte
 	n, _ := conn.Read(response[0:])
 	s := string(response[0:n])
-	fmt.Println("Current dir \"" + s + "\"")
+    if s != oldMsg {
+	    fmt.Println("Current message is \"" + s + "\"")
+    }
+    oldMsg = s
 }
 
 func checkError(err error) {
