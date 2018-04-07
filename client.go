@@ -46,6 +46,7 @@ const (
 var (
 	hostname string
     oldMsg string
+    accountName string
 )
 
 func main() {
@@ -56,7 +57,7 @@ func main() {
 
 	host := os.Args[1]
 
-	accountName := os.Args[2]
+	accountName = os.Args[2]
 	fmt.Println("accountName ", accountName) // gloo
 
 	conn, err := net.Dial("tcp", host+":1202")
@@ -107,7 +108,7 @@ func main() {
 		case uiSend: // gloo 25.3.2018
 			sendMessage(conn, strs[1])
 		default:
-			fmt.Println("Unknown command")
+			//fmt.Println("Unknown command")
 		}
 	}
 }
@@ -119,7 +120,7 @@ func sendAccountName(conn net.Conn, msg string) {
 
 func sendMessage(conn net.Conn, msg string) {
 
-	conn.Write([]byte(kSend + msg))
+    conn.Write([]byte(kSend + msg + " ...From: " + accountName ))
 }
 
 func dirRequest(conn net.Conn) {
