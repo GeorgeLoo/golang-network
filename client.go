@@ -2,6 +2,8 @@
 
 FTPClient
 
+
+Original code from:
 https://ipfs.io/ipfs/QmfYeDhGH9bZzihBUDEQbCbTc5k5FZKURMUoUvfmc27BwL/applevelprotocols/simple_example.html
 
 DESKTOP-K53L4N7
@@ -44,9 +46,9 @@ const (
 )
 
 var (
-	hostname string
-    oldMsg string
-    accountName string
+	hostname    string
+	oldMsg      string
+	accountName string
 )
 
 func main() {
@@ -120,7 +122,7 @@ func sendAccountName(conn net.Conn, msg string) {
 
 func sendMessage(conn net.Conn, msg string) {
 
-    conn.Write([]byte(kSend + msg + " ...From: " + accountName ))
+	conn.Write([]byte(kSend + msg + " ...From: " + accountName))
 }
 
 func dirRequest(conn net.Conn) {
@@ -168,10 +170,10 @@ func pwdRequest(conn net.Conn) {
 	var response [512]byte
 	n, _ := conn.Read(response[0:])
 	s := string(response[0:n])
-    if s != oldMsg {
-	    fmt.Println("Current message is \"" + s + "\"")
-    }
-    oldMsg = s
+	if s != oldMsg {
+		fmt.Println("Current message is \"" + s + "\"")
+	}
+	oldMsg = s
 }
 
 func checkError(err error) {
